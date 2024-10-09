@@ -34,5 +34,52 @@ app.post('/signup', (req, res) => {
         if(results.length > 0){
             return res.status(400).json({msg: 'User already exists.'})
         }
-    }])
+
+        bcrypt.hash(password, 10, (err, hash) => {
+            if(err) throw err;
+
+            db.query(
+                'INSERT INTO patients (first_name, last_name, email, password, phone, date_of_birth, gender, address) VALUES(?,?,?,?,?,?,?,?)',
+                [first_name, last_name, email, hash, phone, date_of_birth, gender, address],
+                (err, result) => {
+                    if (err) throw err;
+                    res.status(201).json({msg:'Patient registration is a success'})
+                }
+            )
+        });
+    }]);
+});
+
+
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // finding if our user exists in the system
+    db.query('SELECT * FROM patients WHERE email = ?', [email], (err, result) => {
+        if(err) throw err;
+        if(result === 0){
+            return res.status(400).json({msg: 'Invalid credentials'});
+        }
+
+        const patient = result[0];
+
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+            if(err) throw err;
+            if(!isMatch){
+                return res.status(400).json({msg: 'Invalid credentials'});
+            }
+
+            const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {
+                expiresIn: '1h',
+            })
+
+            res.json({token, msg: 'Login was usccessfull.'});
+        });
+    });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port${PORT}`);
 })

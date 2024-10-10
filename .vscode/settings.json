@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "Server",
+            "group": "localhost",
+            "database": "node_crud",
+            "username": "root",
+            "password": "your_password_here"
+        }
+    ]
+}

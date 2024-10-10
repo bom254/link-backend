@@ -1,5 +1,5 @@
 // importing dependancies
-const { Pool } = require('mysql');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 // getting the environment variables
@@ -11,4 +11,4 @@ const pool = new Pool ({
     password: process.env.DB_PASS
 });
 
-modules.exports = pool;
+module.exports = pool;
